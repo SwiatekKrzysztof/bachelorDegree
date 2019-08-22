@@ -1,5 +1,7 @@
 package bachelorDegree;
 
+import bachelorDegree.model.HarmonicOscillator;
+import bachelorDegree.model.Oscillator;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -11,6 +13,8 @@ public class App extends Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        Oscillator harmonicOscillator = new HarmonicOscillator();
+        harmonicOscillator.setK(5.5);
+        System.out.println(harmonicOscillator.getK());
     }
 }
