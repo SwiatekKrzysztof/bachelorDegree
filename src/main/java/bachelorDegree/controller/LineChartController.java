@@ -31,8 +31,15 @@ public class LineChartController {
         series.getData().add(new XYChart.Data<>("5",29.0));
         lineChart.getData().addAll(series);
         lineChart.setCreateSymbols(false);
+
         System.out.println(checkIfHarmonic());
         System.out.println(checkIf1D());
         System.out.println(MenuController.baseSize);
+    }
+    private void map1D(){
+
+    }
+    private void map2D(){
+
     }
 }

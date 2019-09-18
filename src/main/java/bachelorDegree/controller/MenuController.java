@@ -1,5 +1,6 @@
 package bachelorDegree.controller;
 
+import bachelorDegree.services.MenuService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,8 +12,16 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static bachelorDegree.model.FunctionBase.*;
 
 @Getter
 @Setter
@@ -20,6 +29,7 @@ public class MenuController {
 
     private ObservableList<String> oscillatorChoiceList = FXCollections.observableArrayList("Harmonic", "Anharmonic");
     private ObservableList<String> dimensionChoiceList = FXCollections.observableArrayList("1D", "2D");
+    private ObservableList<String> functionBaseComboList = FXCollections.observableArrayList();
 
     public static String oscillatorType;
     public static String dimensions;
@@ -51,6 +61,13 @@ public class MenuController {
     public void initialize() {
         oscillatorChoiceBox.setItems(oscillatorChoiceList);
         dimensionsChoiceBox.setItems(dimensionChoiceList);
+        try {
+            createFunctionBaseComboList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //functionBaseComboBox.setItems(functionBaseComboList);
+
         functionBaseComboBox.setDisable(true);
         loadCreateButton.setDisable(true);
         info.setDisable(true);
@@ -60,28 +77,24 @@ public class MenuController {
         nyBox.setDisable(true);
 
         //Listeners for text fields
-        oscillatorChoiceBox.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((v, oldValue, newValue) -> oscillatorChoiceChangeAction(newValue));
-        oscillatorChoiceBox.getSelectionModel()
-                .selectedItemProperty()
-                .addListener(((v,oldValue,newValue)->oscillatorType = newValue));
-
-        dimensionsChoiceBox.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((v, oldValue, newValue) -> dimensionChoiceChangeAction(newValue));
-        dimensionsChoiceBox.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((v, oldValue, newValue) -> dimensions = newValue);
-
-        functionBaseComboBox.getSelectionModel().
-                selectedItemProperty()
-                .addListener((v,oldValue,newValue)-> baseSize = newValue);
+        addListeners();
     }
 
     @FXML
-    public void loadCreateAction(ActionEvent actionEvent) {
+    public void loadCreateAction(ActionEvent actionEvent) throws IOException {
+        if(!MenuService.baseExists(baseSize)) {
+            functionBaseComboList.add(baseSize);
+        }
+        try {
+            INSTANCE.getBase(baseSize);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
+        functionBaseComboBox.setItems(functionBaseComboList);
+        //createFunctionBaseList();
+        functionBaseComboList.setAll(functionBaseComboList.stream()
+                .sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
     }
 
     @FXML
@@ -104,10 +117,10 @@ public class MenuController {
 //        Oscillator oscillatorX = new HarmonicOscillator(5,1.0,1.0,2.0);
 //        Oscillator oscillatorY = new HarmonicOscillator(5,1.0,1.0,2.0);
 //        AnalysisLauncher.open(new OscillatorMapper().setParameters(oscillatorX,oscillatorY));
-        System.out.println("nx= " + nx + " m=" + m + " kx=" + kx);
 
 
     }
+
     private void loadLineChartView(){
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -123,12 +136,46 @@ public class MenuController {
         stage.setScene(new Scene(parent));
         stage.show();
     }
+
     private void oscillatorChoiceChangeAction(String newValue) {
         if (newValue.equals(oscillatorChoiceList.get(0))) {
             menuChangesOscillator(true);
         } else {
             menuChangesOscillator(false);
         }
+    }
+
+    private void createFunctionBaseComboList() throws IOException {
+        functionBaseComboBox.getItems().removeAll();
+        List<String> baseList = IOUtils.readLines(
+                Objects.requireNonNull
+                        (MenuController.class.getClassLoader().getResourceAsStream("bases/")), Charsets.UTF_8);
+        //functionBaseComboList.forEach(a->a=null);
+        functionBaseComboList.addAll(baseList);
+        functionBaseComboBox.setItems(functionBaseComboList);
+    }
+
+    private void addListeners(){
+        //Listeners for text fields
+        oscillatorChoiceBox.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((v, oldValue, newValue) -> oscillatorChoiceChangeAction(newValue));
+        oscillatorChoiceBox.getSelectionModel()
+                .selectedItemProperty()
+                .addListener(((v,oldValue,newValue)->oscillatorType = newValue));
+
+        dimensionsChoiceBox.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((v, oldValue, newValue) -> dimensionChoiceChangeAction(newValue));
+        dimensionsChoiceBox.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((v, oldValue, newValue) -> dimensions = newValue);
+        functionBaseComboBox.getSelectionModel().
+                selectedItemProperty()
+                .addListener((v,oldValue,newValue)-> baseSize = newValue);
+        functionBaseComboBox.getSelectionModel().
+                selectedItemProperty()
+                .addListener((v,oldValue,newValue)-> functionBaseComboBox.setItems(functionBaseComboList));
     }
 
     private void dimensionChoiceChangeAction(String newValue) {
@@ -138,6 +185,7 @@ public class MenuController {
             menuChangesDimension(false);
         }
     }
+
     private void menuChangesOscillator(boolean isOscillatorHarmonic) {
         bothOptionsChosen();
         functionBaseComboBox.setDisable(isOscillatorHarmonic);
