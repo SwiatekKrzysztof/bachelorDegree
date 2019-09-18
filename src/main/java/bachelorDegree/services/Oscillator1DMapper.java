@@ -1,4 +1,5 @@
 package bachelorDegree.services;
 
-public class InputService {
+public class Oscillator1DMapper {
+
 }

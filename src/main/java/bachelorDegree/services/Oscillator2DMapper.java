@@ -14,11 +14,11 @@ import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
-public class OscillatorMapper extends AbstractAnalysis {
+public class Oscillator2DMapper extends AbstractAnalysis {
     private Oscillator oscillatorX;
     private Oscillator oscillatorY;
 
-    public OscillatorMapper setParameters(Oscillator oscillatorX, Oscillator oscillatorY) {
+    public Oscillator2DMapper setParameters(Oscillator oscillatorX, Oscillator oscillatorY) {
         this.oscillatorX = oscillatorX;
         this.oscillatorY = oscillatorY;
         return this;
@@ -26,7 +26,7 @@ public class OscillatorMapper extends AbstractAnalysis {
     public void start(Oscillator oscillatorX, Oscillator oscillatorY){
 
         try {
-            AnalysisLauncher.open(new OscillatorMapper());
+            AnalysisLauncher.open(new Oscillator2DMapper());
         } catch (Exception e) {
             e.printStackTrace();
         }

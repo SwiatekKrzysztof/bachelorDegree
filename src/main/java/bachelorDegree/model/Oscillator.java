@@ -1,30 +1,47 @@
 package bachelorDegree.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public abstract class Oscillator {
-    private int n;
+    private int nx;
+    private int ny;
     private double m;
-    private double k;
+    private double kx;
+    private double ky;
     private double L;
 
     abstract public double getValueOfArgument(double argument);
     public void setParameters(int n,double m, double k){
-        this.n = n;
+        this.nx = n;
         this.m = m;
-        this.k = k;
+        this.kx = k;
     }
 
-    public int getN() {
-        return n;
+    public double getKy() {
+        return ky;
     }
 
-    public void setN(int n) {
-        this.n = n;
+    public void setKy(double ky) {
+        this.ky = ky;
+    }
+
+    public int getNy() {
+        return ny;
+    }
+
+    public void setNy(int ny) {
+        this.ny = ny;
+    }
+
+    public int getNx() {
+        return nx;
+    }
+
+    public void setNx(int nx) {
+        this.nx = nx;
     }
 
     public double getM() {
@@ -35,12 +52,12 @@ public abstract class Oscillator {
         this.m = m;
     }
 
-    public double getK() {
-        return k;
+    public double getKx() {
+        return kx;
     }
 
-    public void setK(double k) {
-        this.k = k;
+    public void setKx(double kx) {
+        this.kx = kx;
     }
 
     public double getL() {

@@ -1,15 +1,10 @@
 package bachelorDegree;
 
-import bachelorDegree.model.HarmonicOscillator;
-import bachelorDegree.model.Oscillator;
-import bachelorDegree.services.OscillatorMapper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.jzy3d.analysis.AnalysisLauncher;
 
 public class App extends Application
 {
