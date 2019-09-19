@@ -16,9 +16,9 @@ import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static bachelorDegree.model.FunctionBase.*;
@@ -82,19 +82,23 @@ public class MenuController {
 
     @FXML
     public void loadCreateAction(ActionEvent actionEvent) throws IOException {
-        if(!MenuService.baseExists(baseSize)) {
+        if (functionBaseComboBox.getSelectionModel().isEmpty()) {
+            functionBaseComboBox.setValue("500");
+        }
+        if(!MenuService.baseExists(baseSize,dimensions)) {
             functionBaseComboList.add(baseSize);
         }
         try {
-            INSTANCE.getBase(baseSize);
+            INSTANCE.findBase(baseSize, dimensions,"C");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
         functionBaseComboBox.setItems(functionBaseComboList);
+        //todo sorting functionBaseComboList
         //createFunctionBaseList();
-        functionBaseComboList.setAll(functionBaseComboList.stream()
-                .sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
+       // functionBaseComboList.setAll(functionBaseComboList.stream()
+        //        .sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
     }
 
     @FXML
@@ -146,12 +150,21 @@ public class MenuController {
     }
 
     private void createFunctionBaseComboList() throws IOException {
-        functionBaseComboBox.getItems().removeAll();
+        //functionBaseComboBox.getItems().removeAll();
+        //todo replace with google reflection
         List<String> baseList = IOUtils.readLines(
                 Objects.requireNonNull
                         (MenuController.class.getClassLoader().getResourceAsStream("bases/")), Charsets.UTF_8);
         //functionBaseComboList.forEach(a->a=null);
-        functionBaseComboList.addAll(baseList);
+        baseList = MenuService.chopList(baseList);
+        baseList = baseList.stream().distinct().collect(Collectors.toList());
+        Pattern pattern = Pattern.compile("\\d*"+dimensionsChoiceBox.getValue());
+        System.out.println(pattern);
+        baseList = baseList.stream()
+                .filter(pattern.asPredicate())
+                .collect(Collectors.toList());
+        System.out.println(baseList);
+        functionBaseComboList.setAll(baseList);
         functionBaseComboBox.setItems(functionBaseComboList);
     }
 
@@ -199,9 +212,14 @@ public class MenuController {
         nyBox.setDisable(isOscillatorOneDimensional);
     }
 
-    private void bothOptionsChosen() {
+    private void bothOptionsChosen(){
         if (oscillatorChoiceBox.getValue() != null && dimensionsChoiceBox.getValue() != null) {
             visualizeButton.setDisable(false);
+            try {
+                createFunctionBaseComboList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

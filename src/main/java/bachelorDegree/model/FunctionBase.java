@@ -10,17 +10,18 @@ import java.io.*;
 public enum FunctionBase {
     INSTANCE;
 
-    RealMatrix C;
-    RealMatrix E;
-    public double[][] getBase(String baseSize) throws IOException, ClassNotFoundException {
-        if(MenuService.baseExists(baseSize)){
-            return deserializeBase(baseSize);
+    double[][] C;
+    double[][] E;
+
+    public void findBase(String baseSize, String dimensions, String baseSymbol) throws IOException, ClassNotFoundException {
+        if(MenuService.baseExists(baseSize,dimensions)){
+            deserializeBase(baseSize,dimensions,baseSymbol);
         } else {
-            createNewBase(Integer.parseInt(baseSize));
-            return deserializeBase(baseSize);
+            createNewBase(baseSize,dimensions,baseSymbol);
+            deserializeBase(baseSize,dimensions,baseSymbol);
         }
     }
-    public void createNewBase(int baseSize) throws IOException, ClassNotFoundException {
+    public void createNewBase(String baseSize, String dimensions, String baseSymbol) throws IOException, ClassNotFoundException {
         System.out.println("CREATING NEW BASE");
         double[][] testDoubleArray = new double[5][5];
         for (int i = 0; i < testDoubleArray.length; i++) {
@@ -28,22 +29,28 @@ public enum FunctionBase {
                 testDoubleArray[i][j] = i%(j+1);
             }
         }
-        serializeBase(testDoubleArray,MenuController.baseSize);
+        serializeBase(testDoubleArray,baseSize,dimensions,"C");
+        serializeBase(testDoubleArray,baseSize,dimensions,"E");
 
     }
-
-    private void serializeBase(double[][] base, String fileName) throws IOException {
-        FileOutputStream fos = new FileOutputStream("src/main/resources/bases/"+ fileName);
+    //todo relocate serialization to another class
+    private void serializeBase(double[][] base, String baseSize, String dimensions, String baseSymbol) throws IOException {
+        FileOutputStream fos = new FileOutputStream("src/main/resources/bases/"+ baseSize + dimensions+ baseSymbol );
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(base);
     }
-
-    private double[][] deserializeBase(String fileName) throws IOException, ClassNotFoundException {
+    private void deserializeBase(String baseSize, String dimensions, String baseSymbol) throws IOException, ClassNotFoundException {
         System.out.println("DESERIALIZING");
-        FileInputStream fis = new FileInputStream("src/main/resources/bases/"+ fileName);
+        FileInputStream fis = new FileInputStream("src/main/resources/bases/"+ baseSize +dimensions + baseSymbol);
         ObjectInputStream ois = new ObjectInputStream(fis);
-        return (double[][]) ois.readObject();
+        if(baseSymbol.equals("C")) {
+            C = (double[][]) ois.readObject();
+        }
+        if(baseSymbol.equals("E")){
+            E= (double[][]) ois.readObject();
+        }
     }
+
     public void printMatrix(double[][] A,String name){
         System.out.println(name);
         for (int i = 0; i < A.length; i++) {
