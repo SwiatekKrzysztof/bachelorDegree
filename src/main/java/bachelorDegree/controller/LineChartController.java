@@ -34,7 +34,7 @@ public class LineChartController {
 
         System.out.println(checkIfHarmonic());
         System.out.println(checkIf1D());
-        System.out.println(MenuController.baseSize);
+        System.out.println(MenuController.basisSetSize);
     }
     private void map1D(){
 

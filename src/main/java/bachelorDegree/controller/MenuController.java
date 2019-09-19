@@ -18,10 +18,9 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static bachelorDegree.model.FunctionBase.*;
+import static bachelorDegree.model.FunctionBasisSet.*;
 
 @Getter
 @Setter
@@ -29,11 +28,11 @@ public class MenuController {
 
     private ObservableList<String> oscillatorChoiceList = FXCollections.observableArrayList("Harmonic", "Anharmonic");
     private ObservableList<String> dimensionChoiceList = FXCollections.observableArrayList("1D", "2D");
-    private ObservableList<String> functionBaseComboList = FXCollections.observableArrayList();
+    private ObservableList<String> functionBasisSetComboList = FXCollections.observableArrayList();
 
     public static String oscillatorType;
     public static String dimensions;
-    public static String baseSize;
+    public static String basisSetSize;
     @FXML
     public TextArea info;
     @FXML
@@ -41,7 +40,7 @@ public class MenuController {
     @FXML
     public ChoiceBox<String> dimensionsChoiceBox;
     @FXML
-    public ComboBox<String> functionBaseComboBox;
+    public ComboBox<String> functionBasisSetComboBox;
     @FXML
     public Button loadCreateButton;
     @FXML
@@ -62,17 +61,17 @@ public class MenuController {
         oscillatorChoiceBox.setItems(oscillatorChoiceList);
         dimensionsChoiceBox.setItems(dimensionChoiceList);
         try {
-            createFunctionBaseComboList();
+            createFunctionBasisSetComboList();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //functionBaseComboBox.setItems(functionBaseComboList);
+        //functionbasisSetComboBox.setItems(functionbasisSetComboList);
 
-        functionBaseComboBox.setDisable(true);
+        functionBasisSetComboBox.setDisable(true);
         loadCreateButton.setDisable(true);
         info.setDisable(true);
         visualizeButton.setDisable(true);
-        functionBaseComboBox.setDisable(true);
+        functionBasisSetComboBox.setDisable(true);
         kyBox.setDisable(true);
         nyBox.setDisable(true);
 
@@ -82,22 +81,22 @@ public class MenuController {
 
     @FXML
     public void loadCreateAction(ActionEvent actionEvent) throws IOException {
-        if (functionBaseComboBox.getSelectionModel().isEmpty()) {
-            functionBaseComboBox.setValue("500");
+        if (functionBasisSetComboBox.getSelectionModel().isEmpty()) {
+            functionBasisSetComboBox.setValue("500");
         }
-        if(!MenuService.baseExists(baseSize,dimensions)) {
-            functionBaseComboList.add(baseSize);
+        if(!MenuService.basisSetExists(basisSetSize)) {
+            functionBasisSetComboList.add(basisSetSize);
         }
         try {
-            INSTANCE.findBase(baseSize, dimensions,"C");
+            INSTANCE.findBasisSet(basisSetSize,"C");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        functionBaseComboBox.setItems(functionBaseComboList);
-        //todo sorting functionBaseComboList
-        //createFunctionBaseList();
-       // functionBaseComboList.setAll(functionBaseComboList.stream()
+        functionBasisSetComboBox.setItems(functionBasisSetComboList);
+        //todo sorting functionbasisSetComboList
+        //createFunctionbasisSetList();
+       // functionbasisSetComboList.setAll(functionbasisSetComboList.stream()
         //        .sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
     }
 
@@ -149,23 +148,23 @@ public class MenuController {
         }
     }
 
-    private void createFunctionBaseComboList() throws IOException {
-        //functionBaseComboBox.getItems().removeAll();
+    private void createFunctionBasisSetComboList() throws IOException {
+        //functionbasisSetComboBox.getItems().removeAll();
         //todo replace with google reflection
-        List<String> baseList = IOUtils.readLines(
+        List<String> basisSetList = IOUtils.readLines(
                 Objects.requireNonNull
-                        (MenuController.class.getClassLoader().getResourceAsStream("bases/")), Charsets.UTF_8);
-        //functionBaseComboList.forEach(a->a=null);
-        baseList = MenuService.chopList(baseList);
-        baseList = baseList.stream().distinct().collect(Collectors.toList());
-        Pattern pattern = Pattern.compile("\\d*"+dimensionsChoiceBox.getValue());
-        System.out.println(pattern);
-        baseList = baseList.stream()
-                .filter(pattern.asPredicate())
-                .collect(Collectors.toList());
-        System.out.println(baseList);
-        functionBaseComboList.setAll(baseList);
-        functionBaseComboBox.setItems(functionBaseComboList);
+                        (MenuController.class.getClassLoader().getResourceAsStream("basisSets/")), Charsets.UTF_8);
+        //functionbasisSetComboList.forEach(a->a=null);
+        basisSetList = MenuService.chopList(basisSetList);
+        basisSetList = basisSetList.stream().distinct().collect(Collectors.toList());
+//        Pattern pattern = Pattern.compile("\\d*"+dimensionsChoiceBox.getValue());
+//        System.out.println(pattern);
+//        basisSetList = basisSetList.stream()
+//                .filter(pattern.asPredicate())
+//                .collect(Collectors.toList());
+        System.out.println(basisSetList);
+        functionBasisSetComboList.setAll(basisSetList);
+        functionBasisSetComboBox.setItems(functionBasisSetComboList);
     }
 
     private void addListeners(){
@@ -183,12 +182,12 @@ public class MenuController {
         dimensionsChoiceBox.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((v, oldValue, newValue) -> dimensions = newValue);
-        functionBaseComboBox.getSelectionModel().
+        functionBasisSetComboBox.getSelectionModel().
                 selectedItemProperty()
-                .addListener((v,oldValue,newValue)-> baseSize = newValue);
-        functionBaseComboBox.getSelectionModel().
+                .addListener((v,oldValue,newValue)-> basisSetSize = newValue);
+        functionBasisSetComboBox.getSelectionModel().
                 selectedItemProperty()
-                .addListener((v,oldValue,newValue)-> functionBaseComboBox.setItems(functionBaseComboList));
+                .addListener((v,oldValue,newValue)-> functionBasisSetComboBox.setItems(functionBasisSetComboList));
     }
 
     private void dimensionChoiceChangeAction(String newValue) {
@@ -201,7 +200,7 @@ public class MenuController {
 
     private void menuChangesOscillator(boolean isOscillatorHarmonic) {
         bothOptionsChosen();
-        functionBaseComboBox.setDisable(isOscillatorHarmonic);
+        functionBasisSetComboBox.setDisable(isOscillatorHarmonic);
         loadCreateButton.setDisable(isOscillatorHarmonic);
         info.setDisable(isOscillatorHarmonic);
     }
@@ -216,7 +215,7 @@ public class MenuController {
         if (oscillatorChoiceBox.getValue() != null && dimensionsChoiceBox.getValue() != null) {
             visualizeButton.setDisable(false);
             try {
-                createFunctionBaseComboList();
+                createFunctionBasisSetComboList();
             } catch (IOException e) {
                 e.printStackTrace();
             }

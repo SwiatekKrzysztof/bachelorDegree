@@ -16,10 +16,10 @@
       <ChoiceBox id="oscillatorChoiceBox" fx:id="oscillatorChoiceBox" layoutX="144.0" layoutY="23.0" prefWidth="150.0" />
       <ChoiceBox id="dimensionsChoiceBox" fx:id="dimensionsChoiceBox" layoutX="144.0" layoutY="70.0" prefWidth="150.0" />
       <Line endX="161.0" layoutX="128.0" layoutY="117.0" startX="-100.0" />
-      <Label layoutX="21.0" layoutY="135.0" text="Fuction Base Size" />
-      <ComboBox id="functionBaseComboBox" fx:id="functionBaseComboBox" editable="true" layoutX="144.0" layoutY="130.0" prefWidth="150.0" promptText="500" />
+      <Label layoutX="21.0" layoutY="135.0" text="Fuction basisSet Size" />
+      <ComboBox id="functionbasisSetComboBox" fx:id="functionBasisSetComboBox" editable="true" layoutX="144.0" layoutY="130.0" prefWidth="150.0" promptText="500" />
       <Button id="loadCreateButton" fx:id="loadCreateButton" layoutX="42.0" layoutY="257.0" mnemonicParsing="false" onAction="#loadCreateAction" prefHeight="31.0" prefWidth="234.0" text="Load/Create" />
-      <TextArea fx:id="info" editable="false" layoutX="6.0" layoutY="172.0" prefHeight="75.0" prefWidth="305.0" text="Bases from the list are pre-generated,&#10;Your choices will be saved for future&#10;visualizations" />
+      <TextArea fx:id="info" editable="false" layoutX="6.0" layoutY="172.0" prefHeight="75.0" prefWidth="305.0" text="basisSets from the list are pre-generated,&#10;Your choices will be saved for future&#10;visualizations" />
       <Line endX="161.0" layoutX="128.0" layoutY="308.0" startX="-100.0" />
       <Label layoutX="30.0" layoutY="335.0" prefHeight="21.0" prefWidth="16.0" text="nx" />
       <TextField id="nxBox" fx:id="nxBox" layoutX="54.0" layoutY="330.0" prefHeight="31.0" prefWidth="89.0" />

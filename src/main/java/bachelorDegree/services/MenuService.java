@@ -16,8 +16,8 @@ public class MenuService {
     public static boolean checkIf1D(){
         return MenuController.dimensions.equals("1D");
     }
-    public static boolean baseExists(String baseSize, String dimensions){
-        return Files.exists(Paths.get("src/main/resources/bases/" + baseSize + dimensions+"C"));
+    public static boolean basisSetExists(String basisSetSize){
+        return Files.exists(Paths.get("src/main/resources/basisSets/" + basisSetSize +"C"));
     }
     public static List<String> chopList(List<String> list){
         for (int i = 0; i < list.size(); i++) {
