@@ -78,7 +78,6 @@ public class MenuController {
         //Listeners for text fields
         addListeners();
     }
-
     @FXML
     public void loadCreateAction(ActionEvent actionEvent) throws IOException {
         if (functionBasisSetComboBox.getSelectionModel().isEmpty()) {
@@ -99,7 +98,6 @@ public class MenuController {
        // functionbasisSetComboList.setAll(functionbasisSetComboList.stream()
         //        .sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
     }
-
     @FXML
     public void visualize(ActionEvent actionEvent) throws Exception {
         setDefaultValues();
@@ -214,11 +212,6 @@ public class MenuController {
     private void bothOptionsChosen(){
         if (oscillatorChoiceBox.getValue() != null && dimensionsChoiceBox.getValue() != null) {
             visualizeButton.setDisable(false);
-            try {
-                createFunctionBasisSetComboList();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 

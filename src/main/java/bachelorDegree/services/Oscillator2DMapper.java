@@ -26,7 +26,8 @@ public class Oscillator2DMapper extends AbstractAnalysis {
     public void start(Oscillator oscillatorX, Oscillator oscillatorY){
 
         try {
-            AnalysisLauncher.open(new Oscillator2DMapper());
+            AnalysisLauncher.open(new Oscillator2DMapper()
+                    .setParameters(oscillatorX,oscillatorY));
         } catch (Exception e) {
             e.printStackTrace();
         }
