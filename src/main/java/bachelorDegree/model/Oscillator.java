@@ -9,6 +9,7 @@ public abstract class Oscillator {
     private int n;
     private double m;
     private double k;
+    private double h;
     private double L;
 
     abstract public double getValueOfArgument(double argument);
@@ -49,5 +50,13 @@ public abstract class Oscillator {
 
     public void setL(double l) {
         L = l;
+    }
+
+    public double getH() {
+        return h;
+    }
+
+    public void setH(double h) {
+        this.h = h;
     }
 }

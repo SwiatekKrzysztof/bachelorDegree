@@ -43,7 +43,7 @@ public class Oscillator2DMapper extends AbstractAnalysis {
             }
         };
         int steps = 50;
-        Range range = new Range(-2,2);
+        Range range = new Range(-8,8);
         final Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
         surface.setColorMapper(new ColorMapper(
                 new ColorMapRainbow(),

@@ -1,6 +1,12 @@
 package bachelorDegree.controller;
 
+import bachelorDegree.model.AnharmonicOscillator;
+import bachelorDegree.model.FunctionBasisSet;
+import bachelorDegree.model.HarmonicOscillator;
+import bachelorDegree.model.Oscillator;
 import bachelorDegree.services.MenuService;
+import bachelorDegree.services.Oscillator1DMapper;
+import bachelorDegree.services.Oscillator2DMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.jzy3d.analysis.AnalysisLauncher;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +32,6 @@ import java.util.stream.Collectors;
 @Setter
 public class MenuController {
 
-
     private ObservableList<String> oscillatorChoiceList = FXCollections.observableArrayList("Harmonic", "Anharmonic");
     private ObservableList<String> dimensionChoiceList = FXCollections.observableArrayList("1D", "2D");
     private ObservableList<String> functionBasisSetComboList = FXCollections.observableArrayList();
@@ -33,6 +39,12 @@ public class MenuController {
     public static String oscillatorType; //= "Harmonic";
     public static String dimensions;
     public static String basisSetSize;
+
+    private FunctionBasisSet basisSetX;
+    private FunctionBasisSet basisSetY;
+    private Oscillator oscillatorX;
+    private Oscillator oscillatorY;
+
     public boolean isOptionQuick;
     @FXML
     public TextArea info;
@@ -73,8 +85,13 @@ public class MenuController {
     @FXML
     public Label CLabel;
     @FXML
+    public Label basisSizeLabelQuick;
+    @FXML
+    public Label basisSizeLabelAdvanced;
+    @FXML
     public Button aboutButton;
     @FXML
+    public TextField advancedBasisSetTextField;
     public void initialize() {
         oscillatorChoiceBox.setItems(oscillatorChoiceList);
         dimensionsChoiceBox.setItems(dimensionChoiceList);
@@ -103,27 +120,36 @@ public class MenuController {
         setDisableQuickOnlyOptions(!quickCheckBox.isSelected());
 
         if(advancedCheckBox.isSelected()){
-            BBox.setDisable(!oscillatorChoiceBox.getValue().equals("Anharmonic"));
-            CBox.setDisable(!oscillatorChoiceBox.getValue().equals("Anharmonic"));
+            boolean isItNotAnharmonic = !oscillatorChoiceBox.getValue().equals("Anharmonic");
+            BBox.setDisable(isItNotAnharmonic);
+            CBox.setDisable(isItNotAnharmonic);
+            advancedBasisSetTextField.setDisable(isItNotAnharmonic);
+            basisSizeLabelAdvanced.setDisable(isItNotAnharmonic);
             kyBox.setDisable(!dimensionsChoiceBox.getValue().equals("2D"));
         } else {
             BBox.setDisable(true);
             CBox.setDisable(true);
+            advancedBasisSetTextField.setDisable(true);
+            basisSizeLabelAdvanced.setDisable(true);
             kyBox.setDisable(true);
         }
         nyBox.setDisable(!dimensionsChoiceBox.getValue().equals("2D"));
 
         if(quickCheckBox.isSelected()){
             functionBasisSetComboBox.setDisable(!oscillatorChoiceBox.getValue().equals("Anharmonic"));
+            basisSizeLabelQuick.setDisable(!oscillatorChoiceBox.getValue().equals("Anharmonic"));
         } else {
             functionBasisSetComboBox.setDisable(true);
+            basisSizeLabelQuick.setDisable(true);
         }
 
         try {
+            //todo sorting functionbasisSetComboList
             createFunctionBasisSetComboList();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void setDisableAdvancedOnlyOptions(boolean bool) {
@@ -138,25 +164,81 @@ public class MenuController {
     }
 
     @FXML
-    public void loadCreateAction(ActionEvent actionEvent) throws IOException {
-        if (functionBasisSetComboBox.getSelectionModel().isEmpty()) {
-            functionBasisSetComboBox.setValue("500");
-        }
+    public void loadCreateAction(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
+        setDefaultValues();
+//        if (functionBasisSetComboBox.getSelectionModel().isEmpty()) {
+//            functionBasisSetComboBox.setValue("500");
+//        }
         if (!MenuService.basisSetExists(basisSetSize)) {
             functionBasisSetComboList.add(basisSetSize);
+            System.out.println("DZIAłA");
         }
-//        try {
-//            INSTANCE.findBasisSet(basisSetSize, "C");
-//        } catch (IOException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
+        //QUICK
+        boolean oscillatorIsHarmonic = oscillatorChoiceBox.getValue().equals("Harmonic");
+        boolean oscillatorIsAnharmonic = oscillatorChoiceBox.getValue().equals("Anharmonic");
+        boolean dimensionIs1D = dimensionsChoiceBox.getValue().equals("1D");
+        boolean dimensionIs2D = dimensionsChoiceBox.getValue().equals("2D");;
+
+        if(quickCheckBox.isSelected())
+        {
+//            String nx = nxBox.getText();
+//            String ny = nyBox.getText();
+            String m = "1.0";
+            String k = "1.0";
+            String h = "1.0";
+            String L = "70.0";
+            String basisSetSize = functionBasisSetComboBox.getValue();
+
+            if(oscillatorIsHarmonic) {
+                oscillatorX = new HarmonicOscillator(m,k,h,L);
+                if(dimensionIs2D)
+                    oscillatorY = new HarmonicOscillator(m,k,h,L);
+            } else if(oscillatorIsAnharmonic){
+                basisSetX = new FunctionBasisSet();
+                basisSetX.findBasisSet(basisSetSize);
+                oscillatorX = new AnharmonicOscillator(basisSetX,L);
+                if(dimensionIs2D) {
+                    //todo maybe redundant
+                    basisSetY = new FunctionBasisSet();
+                    basisSetY = basisSetX;
+                    oscillatorY = new AnharmonicOscillator(basisSetY,L);
+                }
+            }
+        }
+        else if(advancedCheckBox.isSelected())
+        {
+//            String nx = nxBox.getText();
+//            String ny = nyBox.getText();
+            String m = mBox.getText();
+            String kx = kxBox.getText();
+            String ky = kyBox.getText();
+            String h = hBox.getText();
+            String L = LBox.getText();
+            String B = BBox.getText();
+            String C = CBox.getText();
+            String basisSetSize = advancedBasisSetTextField.getText();
+
+            if(oscillatorIsHarmonic) {
+                oscillatorX = new HarmonicOscillator(m,kx,h,L);
+                if(dimensionIs2D)
+                    oscillatorY = new HarmonicOscillator(m,ky,h,L);
+            } else if(oscillatorIsAnharmonic){
+                basisSetX = new FunctionBasisSet();
+                basisSetX.createNewAdvancedBasicSet(m,kx,h,L,B,C,basisSetSize);
+                oscillatorX = new AnharmonicOscillator(basisSetX,L);
+                if(dimensionIs2D) {
+                    basisSetY = new FunctionBasisSet();
+                    basisSetY.createNewAdvancedBasicSet(m,ky,h,L,B,C,basisSetSize);
+                    oscillatorY = new AnharmonicOscillator(basisSetY,L);
+                }
+
+            }
+        }
 
         functionBasisSetComboBox.setItems(functionBasisSetComboList);
 
         //todo sorting functionbasisSetComboList
-        //createFunctionbasisSetList();
-        // functionbasisSetComboList.setAll(functionbasisSetComboList.stream()
-        //        .sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
+
         checkOptions();
     }
 
@@ -164,40 +246,37 @@ public class MenuController {
     public void visualize(ActionEvent actionEvent) throws Exception {
         setDefaultValues();
         int nx = Integer.parseInt(nxBox.getText());
-        double m = Double.parseDouble(mBox.getText());
-        double kx = Double.parseDouble(kxBox.getText());
         int ny = Integer.parseInt(nyBox.getText());
-        double ky = Double.parseDouble(kyBox.getText());
+//        double m = Double.parseDouble(mBox.getText());
+//        double kx = Double.parseDouble(kxBox.getText());
+//        double ky = Double.parseDouble(kyBox.getText());
 
         if (dimensionsChoiceBox.getValue().equals("1D")) {
-            loadLineChartView();
+            oscillatorX.setN(nx);
+            Oscillator1DMapper mapper = new Oscillator1DMapper(oscillatorX);
+            mapper.loadLineChartView();
+        } else if(dimensionsChoiceBox.getValue().equals("2D")){
+            oscillatorX.setN(nx);
+            oscillatorY.setN(ny);
+            AnalysisLauncher.open(new Oscillator2DMapper().setParameters(oscillatorX,oscillatorY));
         }
-//        if(oscillatorChoiceBox.getValue().equals("Harmonic")){
+    }
+
+//    private void loadLineChartView() {
+//        Stage stage = new Stage();
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(getClass().getResource("/lineChartView.fxml"));
 //
-//        } else {
-//
+//        try {
+//            fxmlLoader.load();
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
-//        Oscillator oscillatorX = new HarmonicOscillator(5,1.0,1.0,2.0);
-//        Oscillator oscillatorY = new HarmonicOscillator(5,1.0,1.0,2.0);
-//        AnalysisLauncher.open(new OscillatorMapper().setParameters(oscillatorX,oscillatorY));
-
-    }
-
-    private void loadLineChartView() {
-        Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/lineChartView.fxml"));
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Parent parent = fxmlLoader.getRoot();
-        stage.setScene(new Scene(parent));
-        stage.show();
-    }
+//
+//        Parent parent = fxmlLoader.getRoot();
+//        stage.setScene(new Scene(parent));
+//        stage.show();
+//    }
 
     private void oscillatorChoiceChangeAction(String newValue) {
         if (newValue.equals(oscillatorChoiceList.get(0))) {
@@ -288,6 +367,9 @@ public class MenuController {
         if (kyBox.getText().equals("")) {
             kyBox.setText("1.0");
         }
+        if (hBox.getText().equals("")) {
+            hBox.setText("1.0");
+        }
         if (BBox.getText().equals("")) {
             BBox.setText("1.0");
         }
@@ -295,7 +377,10 @@ public class MenuController {
             CBox.setText("1.0");
         }
         if (LBox.getText().equals("")) {
-            LBox.setText("20.0");
+            LBox.setText("70.0");
+        }
+        if (advancedBasisSetTextField.getText().equals("")) {
+            advancedBasisSetTextField.setText("100");
         }
     }
 
