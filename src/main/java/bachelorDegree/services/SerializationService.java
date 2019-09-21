@@ -13,15 +13,15 @@ public class SerializationService {
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(basisSet.getData());
     }
-    public static void deserializeBasisSet(String basisSetSize, String basisSetSymbol) throws IOException, ClassNotFoundException {
+    public static void deserializeBasisSet(FunctionBasisSet functionBasisSet, String basisSetSize, String basisSetSymbol) throws IOException, ClassNotFoundException {
         System.out.println("DESERIALIZING");
         FileInputStream fis = new FileInputStream("src/main/resources/basisSets/"+ basisSetSize + basisSetSymbol);
         ObjectInputStream ois = new ObjectInputStream(fis);
         if(basisSetSymbol.equals("C")) {
-            FunctionBasisSet.INSTANCE.setC(new BlockRealMatrix((double[][]) ois.readObject()));
+            functionBasisSet.setC(new BlockRealMatrix((double[][]) ois.readObject()));
         }
         if(basisSetSymbol.equals("E")){
-            FunctionBasisSet.INSTANCE.setE(new BlockRealMatrix((double[][]) ois.readObject()));
+            functionBasisSet.setE(new BlockRealMatrix((double[][]) ois.readObject()));
         }
     }
 }

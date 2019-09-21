@@ -20,17 +20,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
 @Getter
 @Setter
-public class MenuController {
-
+public class MenuControllerOld {
 
     private ObservableList<String> oscillatorChoiceList = FXCollections.observableArrayList("Harmonic", "Anharmonic");
     private ObservableList<String> dimensionChoiceList = FXCollections.observableArrayList("1D", "2D");
     private ObservableList<String> functionBasisSetComboList = FXCollections.observableArrayList();
 
-    public static String oscillatorType; //= "Harmonic";
+    public static String oscillatorType = "Harmonic";
     public static String dimensions;
     public static String basisSetSize;
     public boolean isOptionQuick;
@@ -68,98 +66,51 @@ public class MenuController {
     public TextField CBox;
     @FXML
     public Button visualizeButton;
-    @FXML
-    public Label BLabel;
-    @FXML
-    public Label CLabel;
-    @FXML
-    public Button aboutButton;
+
     @FXML
     public void initialize() {
         oscillatorChoiceBox.setItems(oscillatorChoiceList);
         dimensionsChoiceBox.setItems(dimensionChoiceList);
-
-        oscillatorChoiceBox.setValue("Harmonic");
-        dimensionsChoiceBox.setValue("1D");
-
-        //Listeners for text fields
-        addListeners();
-
-        checkOptions();
-    }
-
-    private void checkOptions() {
-        //Checking if dimension, oscillator type and calculating option are selected
-        //then enabling load and vis buttons
-        necessaryOptionsChosen();
-        //Checking if dimension, oscillator type are selected
-        if (oscillatorChoiceBox.getValue() != null
-                && dimensionsChoiceBox.getValue() != null) {
-            quickCheckBox.setDisable(false);
-            advancedCheckBox.setDisable(false);
-        }
-
-        setDisableAdvancedOnlyOptions(!advancedCheckBox.isSelected());
-        setDisableQuickOnlyOptions(!quickCheckBox.isSelected());
-
-        if(advancedCheckBox.isSelected()){
-            BBox.setDisable(!oscillatorChoiceBox.getValue().equals("Anharmonic"));
-            CBox.setDisable(!oscillatorChoiceBox.getValue().equals("Anharmonic"));
-            kyBox.setDisable(!dimensionsChoiceBox.getValue().equals("2D"));
-        } else {
-            BBox.setDisable(true);
-            CBox.setDisable(true);
-            kyBox.setDisable(true);
-        }
-        nyBox.setDisable(!dimensionsChoiceBox.getValue().equals("2D"));
-
-        if(quickCheckBox.isSelected()){
-            functionBasisSetComboBox.setDisable(!oscillatorChoiceBox.getValue().equals("Anharmonic"));
-        } else {
-            functionBasisSetComboBox.setDisable(true);
-        }
-
         try {
             createFunctionBasisSetComboList();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+        //functionbasisSetComboBox.setItems(functionbasisSetComboList);
 
-    private void setDisableAdvancedOnlyOptions(boolean bool) {
-        mBox.setDisable(bool);
-        kxBox.setDisable(bool);
-        hBox.setDisable(bool);
-        LBox.setDisable(bool);
-    }
+        functionBasisSetComboBox.setDisable(true);
+        loadCreateButton.setDisable(true);
+        info.setDisable(true);
+        visualizeButton.setDisable(true);
+        functionBasisSetComboBox.setDisable(true);
+        kyBox.setDisable(true);
+        nyBox.setDisable(true);
 
-    private void setDisableQuickOnlyOptions(boolean bool) {
-        info.setDisable(bool);
+        advancedOptionsDisabled(true);
+        quickOptionsDisabled(true);
+        //Listeners for text fields
+        addListeners();
     }
-
     @FXML
     public void loadCreateAction(ActionEvent actionEvent) throws IOException {
         if (functionBasisSetComboBox.getSelectionModel().isEmpty()) {
             functionBasisSetComboBox.setValue("500");
         }
-        if (!MenuService.basisSetExists(basisSetSize)) {
+        if(!MenuService.basisSetExists(basisSetSize)) {
             functionBasisSetComboList.add(basisSetSize);
         }
 //        try {
-//            INSTANCE.findBasisSet(basisSetSize, "C");
+//            INSTANCE.findBasisSet(basisSetSize,"C");
 //        } catch (IOException | ClassNotFoundException e) {
 //            e.printStackTrace();
 //        }
 
         functionBasisSetComboBox.setItems(functionBasisSetComboList);
-
         //todo sorting functionbasisSetComboList
         //createFunctionbasisSetList();
-        // functionbasisSetComboList.setAll(functionbasisSetComboList.stream()
+       // functionbasisSetComboList.setAll(functionbasisSetComboList.stream()
         //        .sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
-        checkOptions();
     }
-
     @FXML
     public void visualize(ActionEvent actionEvent) throws Exception {
         setDefaultValues();
@@ -169,7 +120,7 @@ public class MenuController {
         int ny = Integer.parseInt(nyBox.getText());
         double ky = Double.parseDouble(kyBox.getText());
 
-        if (dimensionsChoiceBox.getValue().equals("1D")) {
+        if(dimensionsChoiceBox.getValue().equals("1D")){
             loadLineChartView();
         }
 //        if(oscillatorChoiceBox.getValue().equals("Harmonic")){
@@ -181,9 +132,10 @@ public class MenuController {
 //        Oscillator oscillatorY = new HarmonicOscillator(5,1.0,1.0,2.0);
 //        AnalysisLauncher.open(new OscillatorMapper().setParameters(oscillatorX,oscillatorY));
 
+
     }
 
-    private void loadLineChartView() {
+    private void loadLineChartView(){
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/lineChartView.fxml"));
@@ -208,26 +160,32 @@ public class MenuController {
     }
 
     private void createFunctionBasisSetComboList() throws IOException {
+        //functionbasisSetComboBox.getItems().removeAll();
         //todo replace with google reflection
         List<String> basisSetList = IOUtils.readLines(
                 Objects.requireNonNull
-                        (MenuController.class.getClassLoader().getResourceAsStream("basisSets/")), Charsets.UTF_8);
+                        (MenuControllerOld.class.getClassLoader().getResourceAsStream("basisSets/")), Charsets.UTF_8);
+        //functionbasisSetComboList.forEach(a->a=null);
         basisSetList = MenuService.chopList(basisSetList);
         basisSetList = basisSetList.stream().distinct().collect(Collectors.toList());
-
+//        Pattern pattern = Pattern.compile("\\d*"+dimensionsChoiceBox.getValue());
+//        System.out.println(pattern);
+//        basisSetList = basisSetList.stream()
+//                .filter(pattern.asPredicate())
+//                .collect(Collectors.toList());
         System.out.println(basisSetList);
         functionBasisSetComboList.setAll(basisSetList);
         functionBasisSetComboBox.setItems(functionBasisSetComboList);
     }
 
-    private void addListeners() {
+    private void addListeners(){
         //Listeners for text fields
         oscillatorChoiceBox.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((v, oldValue, newValue) -> oscillatorChoiceChangeAction(newValue));
         oscillatorChoiceBox.getSelectionModel()
                 .selectedItemProperty()
-                .addListener(((v, oldValue, newValue) -> oscillatorType = newValue));
+                .addListener(((v,oldValue,newValue)->oscillatorType = newValue));
 
         dimensionsChoiceBox.getSelectionModel()
                 .selectedItemProperty()
@@ -237,10 +195,10 @@ public class MenuController {
                 .addListener((v, oldValue, newValue) -> dimensions = newValue);
         functionBasisSetComboBox.getSelectionModel().
                 selectedItemProperty()
-                .addListener((v, oldValue, newValue) -> basisSetSize = newValue);
+                .addListener((v,oldValue,newValue)-> basisSetSize = newValue);
         functionBasisSetComboBox.getSelectionModel().
                 selectedItemProperty()
-                .addListener((v, oldValue, newValue) -> functionBasisSetComboBox.setItems(functionBasisSetComboList));
+                .addListener((v,oldValue,newValue)-> functionBasisSetComboBox.setItems(functionBasisSetComboList));
     }
 
     private void dimensionChoiceChangeAction(String newValue) {
@@ -250,24 +208,29 @@ public class MenuController {
             menuChangesDimension(false);
         }
     }
-    //todo maybe redundant?
+
     private void menuChangesOscillator(boolean isOscillatorHarmonic) {
-        checkOptions();
-    }
-    //todo maybe redundant?
-    private void menuChangesDimension(boolean isOscillatorOneDimensional) {
-        checkOptions();
+        necessaryOptionsChosen();
+        functionBasisSetComboBox.setDisable(isOscillatorHarmonic);
+        loadCreateButton.setDisable(isOscillatorHarmonic);
+        info.setDisable(isOscillatorHarmonic);
+        if(isOscillatorHarmonic){
+            BBox.setDisable(true);
+            CBox.setDisable(true);
+        }
     }
 
-    private void necessaryOptionsChosen() {
+    private void menuChangesDimension(boolean isOscillatorOneDimensional) {
+        necessaryOptionsChosen();
+        kyBox.setDisable(isOscillatorOneDimensional);
+        nyBox.setDisable(isOscillatorOneDimensional);
+    }
+
+    private void necessaryOptionsChosen(){
         if (oscillatorChoiceBox.getValue() != null
                 && dimensionsChoiceBox.getValue() != null
                 && (advancedCheckBox.isSelected() || quickCheckBox.isSelected())) {
             visualizeButton.setDisable(false);
-            loadCreateButton.setDisable(false);
-        } else {
-            visualizeButton.setDisable(true);
-            loadCreateButton.setDisable(true);
         }
     }
 
@@ -282,36 +245,54 @@ public class MenuController {
             mBox.setText("1.0");
         }
 
-        if (nyBox.getText().equals("")) {
-            nyBox.setText("0");
-        }
-        if (kyBox.getText().equals("")) {
-            kyBox.setText("1.0");
-        }
-        if (BBox.getText().equals("")) {
-            BBox.setText("1.0");
-        }
-        if (CBox.getText().equals("")) {
-            CBox.setText("1.0");
-        }
-        if (LBox.getText().equals("")) {
-            LBox.setText("20.0");
-        }
+//        if (!nyBox.isDisabled()) {
+            if (nyBox.getText().equals("")) {
+                nyBox.setText("0");
+            }
+            if (kyBox.getText().equals("")) {
+                kyBox.setText("1.0");
+            }
+//        }
     }
 
     @FXML
     public void quickCheckBoxAction(ActionEvent actionEvent) {
+        isOptionQuick = true;
         advancedCheckBox.setSelected(false);
-        checkOptions();
-    }
+        necessaryOptionsChosen();
+        advancedOptionsDisabled(true);
+        quickOptionsDisabled(false);
 
+        //BBox.setDisable();
+    }
     @FXML
     public void advancedCheckBoxAction(ActionEvent actionEvent) {
+        isOptionQuick = false;
         quickCheckBox.setSelected(false);
-        checkOptions();
+        necessaryOptionsChosen();
+        quickOptionsDisabled(true);
+        advancedOptionsDisabled(false);
+
     }
 
-    public void aboutAction(ActionEvent actionEvent) {
-        //todo about program and author
+    public void advancedOptionsDisabled(boolean bool){
+        mBox.setDisable(bool);
+        kxBox.setDisable(bool);
+        kyBox.setDisable(bool);
+        hBox.setDisable(bool);
+        LBox.setDisable(bool);
+        if(oscillatorType.equals("Anharmonic")&&!bool) {
+            BBox.setDisable(false);
+            CBox.setDisable(false);
+        } else {
+            BBox.setDisable(true);
+            CBox.setDisable(true);
+        }
+    }
+    public void quickOptionsDisabled(boolean bool){
+        if(oscillatorType.equals("Anharmonic")&&!bool){
+            functionBasisSetComboBox.setDisable(true);
+        }
+
     }
 }

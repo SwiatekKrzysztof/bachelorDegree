@@ -8,14 +8,14 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static bachelorDegree.services.SerializationService.deserializeBasisSet;
 import static bachelorDegree.services.SerializationService.serializeBasisSet;
 
 //todo change to class for every AnharmonicOscillator have to have it's own base (k can be different for each)
 //todo add field to AnharmonicOscillator
-public enum FunctionBasisSet {
-    INSTANCE;
+public class FunctionBasisSet {
 
     private RealMatrix C;
     private RealMatrix E;
@@ -24,10 +24,10 @@ public enum FunctionBasisSet {
 
     public void findBasisSet(String basisSetSize, String basisSetSymbol) throws IOException, ClassNotFoundException {
         if (MenuService.basisSetExists(basisSetSize)) {
-            deserializeBasisSet(basisSetSize, basisSetSymbol);
+            deserializeBasisSet(this,basisSetSize, basisSetSymbol);
         } else {
             createNewBasisSet(basisSetSize, basisSetSymbol);
-            deserializeBasisSet(basisSetSize, basisSetSymbol);
+            deserializeBasisSet(this,basisSetSize, basisSetSymbol);
             printMatrix(C.getData(),"C");
         }
     }
@@ -48,9 +48,7 @@ public enum FunctionBasisSet {
 
     //REFACTOR
 
-    private void createMatrices(int basisSetSize, double L, double k, double m){
-//        this.k = k;
-//        this.L = L;
+    private void createMatrices(int basisSetSize, double L, double k, double m, double h){
         RealMatrix A = new BlockRealMatrix(basisSetSize,basisSetSize);
         int sum;
         for (int i = 1; i <= basisSetSize; i++) {
@@ -64,8 +62,8 @@ public enum FunctionBasisSet {
                 }
             }
         }
-        //todo why k is h?
-        RealMatrix H = createHMatrix(A,k,basisSetSize,L,m,k);
+        //todo why k is h? //fixed to h
+        RealMatrix H = createHMatrix(A,k,basisSetSize,L,m,h);
         EigenDecomposition decomposition = new EigenDecomposition(H);
         this.C = decomposition.getV();
         
@@ -106,9 +104,7 @@ public enum FunctionBasisSet {
     }
     private RealMatrix createFunctionBase(int basisSetSize, double k){
         double[] doubleBase = new double[basisSetSize];
-        for (int i = 0; i < doubleBase.length; i++) {
-            doubleBase[i] = (k)/2.0;
-        }
+        Arrays.fill(doubleBase, (k) / 2.0);
         return new DiagonalMatrix(doubleBase,false);
     }
 

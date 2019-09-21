@@ -6,42 +6,25 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class Oscillator {
-    private int nx;
-    private int ny;
+    private int n;
     private double m;
-    private double kx;
-    private double ky;
+    private double k;
     private double L;
 
     abstract public double getValueOfArgument(double argument);
-    public void setParameters(int n,double m, double k){
-        this.nx = n;
+
+    public void setParameters(int n, double m, double k) {
+        this.n = n;
         this.m = m;
-        this.kx = k;
+        this.k = k;
     }
 
-    public double getKy() {
-        return ky;
+    public int getN() {
+        return n;
     }
 
-    public void setKy(double ky) {
-        this.ky = ky;
-    }
-
-    public int getNy() {
-        return ny;
-    }
-
-    public void setNy(int ny) {
-        this.ny = ny;
-    }
-
-    public int getNx() {
-        return nx;
-    }
-
-    public void setNx(int nx) {
-        this.nx = nx;
+    public void setN(int n) {
+        this.n = n;
     }
 
     public double getM() {
@@ -52,12 +35,12 @@ public abstract class Oscillator {
         this.m = m;
     }
 
-    public double getKx() {
-        return kx;
+    public double getK() {
+        return k;
     }
 
-    public void setKx(double kx) {
-        this.kx = kx;
+    public void setK(double k) {
+        this.k = k;
     }
 
     public double getL() {

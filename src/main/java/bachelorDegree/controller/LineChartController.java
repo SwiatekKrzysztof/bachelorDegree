@@ -1,6 +1,5 @@
 package bachelorDegree.controller;
 
-import bachelorDegree.services.MenuService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
@@ -34,7 +33,7 @@ public class LineChartController {
 
         System.out.println(checkIfHarmonic());
         System.out.println(checkIf1D());
-        System.out.println(MenuController.basisSetSize);
+        System.out.println(MenuControllerOld.basisSetSize);
     }
     private void map1D(){
 
