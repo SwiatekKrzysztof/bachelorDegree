@@ -66,10 +66,6 @@ public class FunctionBasisSet {
         createMatrices(basisSetSize,L,k,m,h,B,C);
     }
 
-
-
-    //REFACTOR
-
     private void createMatrices(int basisSetSize, double L, double k, double m, double h,double B, double C){
         RealMatrix A = new BlockRealMatrix(basisSetSize,basisSetSize);
         int sum;
@@ -84,16 +80,11 @@ public class FunctionBasisSet {
                 }
             }
         }
-        //todo why k is h? //fixed to h
         RealMatrix H = createHMatrix(A,k,basisSetSize,L,m,h,B,C);
         EigenDecomposition decomposition = new EigenDecomposition(H);
         this.CMatrix = decomposition.getV();
         
         RealMatrix EDiag = decomposition.getD();
-
-//        printMatrix(A,"A");
-//        printMatrix(this.C,"C");
-//        printMatrix(this.EDiag,"E Diagonala");
         getMapOfDiagonalMatrixAndVector(EDiag);
     }
     private void getMapOfDiagonalMatrixAndVector(RealMatrix diagonal){
@@ -121,12 +112,10 @@ public class FunctionBasisSet {
         vectorsMap.forEach(System.out::println);
 
         this.ESorted = diagonalArray;
-
-//        this.vectorsMap = vectorsMap;
         }
     private RealMatrix createFunctionBase(int basisSetSize, double k){
         double[] doubleBase = new double[basisSetSize];
-        Arrays.fill(doubleBase, (k) / 2.0);
+        Arrays.fill(doubleBase, (k) /2.0);
         return new DiagonalMatrix(doubleBase,false);
     }
 
@@ -135,16 +124,18 @@ public class FunctionBasisSet {
 
         EigenDecomposition decomposition = new EigenDecomposition(A);
         RealMatrix T = decomposition.getV();
-        RealMatrix Ttrans = decomposition.getVT();
+        RealMatrix TTrans = decomposition.getVT();
         RealMatrix D = decomposition.getD();
-        RealMatrix Vdiag = createVDiagMatrix(D,base,B,C);
+        RealMatrix VDiag = createVDiagMatrix(D,base,B,C);
 
-        RealMatrix V = T.multiply(Vdiag).multiply(Ttrans).copy(); // Potential Energy
-        RealMatrix K = createKMatrix(basisSetSize,L,m,h); //Kinetic Energy
+        // Potential Energy
+        RealMatrix V = T.multiply(VDiag).multiply(TTrans).copy();
+        //Kinetic Energy
+        RealMatrix K = createKMatrix(basisSetSize,L,m,h);
         RealMatrix H = V.add(K);
 
 //        printMatrix(T,"T");
-//        printMatrix(Ttrans,"T Transponowana");
+//        printMatrix(TTrans,"T Transponowana");
 //        printMatrix(D,"D");
 //        printMatrix(Vdiag,"V Diagonalna");
 //        printMatrix(V,"V");
@@ -152,7 +143,6 @@ public class FunctionBasisSet {
 //        printMatrix(H,"H");
         return H;
     }
-        //todo isn't h=1?
     private  RealMatrix createKMatrix(int basisSetSize,double L, double m,double h) { //Kinetic Energy
         double[] doubleK = new double[basisSetSize];
         double multiplier = ( (h*h)/(2.0*m) ) * Math.pow( (Math.PI/L) ,2.0);
@@ -163,21 +153,16 @@ public class FunctionBasisSet {
     }
 
     private RealMatrix createVDiagMatrix(RealMatrix D, RealMatrix base, double B, double C){
-        RealMatrix temp = D.power(2).multiply(base);
+        RealMatrix temp = D.power(2).multiply(base)
                 //TODO work on that code, it puts wrong energy values
-//                .add(D.power(4).scalarMultiply(3))
-//                .add(D.power(3).scalarMultiply(3));
-        printMatrix(temp.getData(),"Baza funkcji");
+                .add(D.power(3).scalarMultiply(B))
+                .add(D.power(4).scalarMultiply(C));
+        //printMatrix(temp.getData(),"Baza funkcji");
         return temp;
 
     }
 
-
-    //REFACTOR
-
-
-
-    public void printMatrix(double[][] A, String name) {
+    private void printMatrix(double[][] A, String name) {
         System.out.println(name);
         for (int i = 0; i < A.length; i++) {
             for (double[] doubles : A) {
