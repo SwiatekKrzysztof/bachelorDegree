@@ -1,6 +1,6 @@
 package bachelorDegree.controller;
 
-import bachelorDegree.services.MenuService;
+import bachelorDegree.service.MenuService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -99,11 +99,6 @@ public class MenuControllerOld {
         if(!MenuService.basisSetExists(basisSetSize)) {
             functionBasisSetComboList.add(basisSetSize);
         }
-//        try {
-//            INSTANCE.findBasisSet(basisSetSize,"C");
-//        } catch (IOException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
 
         functionBasisSetComboBox.setItems(functionBasisSetComboList);
         //todo sorting functionbasisSetComboList
@@ -123,16 +118,6 @@ public class MenuControllerOld {
         if(dimensionsChoiceBox.getValue().equals("1D")){
             loadLineChartView();
         }
-//        if(oscillatorChoiceBox.getValue().equals("Harmonic")){
-//
-//        } else {
-//
-//        }
-//        Oscillator oscillatorX = new HarmonicOscillator(5,1.0,1.0,2.0);
-//        Oscillator oscillatorY = new HarmonicOscillator(5,1.0,1.0,2.0);
-//        AnalysisLauncher.open(new OscillatorMapper().setParameters(oscillatorX,oscillatorY));
-
-
     }
 
     private void loadLineChartView(){

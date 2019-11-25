@@ -1,4 +1,4 @@
-package bachelorDegree.services;
+package bachelorDegree.service;
 
 import bachelorDegree.controller.LineChartController;
 import bachelorDegree.model.Oscillator;

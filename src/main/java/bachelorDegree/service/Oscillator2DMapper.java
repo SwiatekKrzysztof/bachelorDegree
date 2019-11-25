@@ -1,4 +1,4 @@
-package bachelorDegree.services;
+package bachelorDegree.service;
 
 import bachelorDegree.model.Oscillator;
 import org.jzy3d.analysis.AbstractAnalysis;

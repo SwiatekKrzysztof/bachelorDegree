@@ -1,6 +1,6 @@
 package bachelorDegree.model;
 
-import bachelorDegree.services.MenuService;
+import bachelorDegree.service.MenuService;
 import org.apache.commons.math3.linear.BlockRealMatrix;
 import org.apache.commons.math3.linear.DiagonalMatrix;
 import org.apache.commons.math3.linear.EigenDecomposition;
@@ -10,8 +10,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static bachelorDegree.services.SerializationService.deserializeBasisSet;
-import static bachelorDegree.services.SerializationService.serializeBasisSet;
+import static bachelorDegree.service.SerializationService.deserializeBasisSet;
+import static bachelorDegree.service.SerializationService.serializeBasisSet;
 
 //todo change to class for every AnharmonicOscillator have to have it's own base (k can be different for each)
 //todo add field to AnharmonicOscillator
@@ -48,6 +48,7 @@ public class FunctionBasisSet {
         String CParameter = "1.0";
         createNewAdvancedBasicSet("1.0","1.0","1.0","70.0",BParameter,CParameter,basisSetSize);
         serializeBasisSet(CMatrix, basisSetSize, "C");
+        //serializeBasisSet(vectorsMap,basisSetSize,"V");
         //serializeBasisSet(EMatrix, basisSetSize, "E");
     }
 
@@ -115,7 +116,9 @@ public class FunctionBasisSet {
         }
     private RealMatrix createFunctionBase(int basisSetSize, double k){
         double[] doubleBase = new double[basisSetSize];
-        Arrays.fill(doubleBase, (k) /2.0);
+        //TODO CHANGED LINE< TESTING >
+        //Arrays.fill(doubleBase, (k) /2.0);
+        Arrays.fill(doubleBase, k);
         return new DiagonalMatrix(doubleBase,false);
     }
 
@@ -133,14 +136,6 @@ public class FunctionBasisSet {
         //Kinetic Energy
         RealMatrix K = createKMatrix(basisSetSize,L,m,h);
         RealMatrix H = V.add(K);
-
-//        printMatrix(T,"T");
-//        printMatrix(TTrans,"T Transponowana");
-//        printMatrix(D,"D");
-//        printMatrix(Vdiag,"V Diagonalna");
-//        printMatrix(V,"V");
-//        printMatrix(K,"K");
-//        printMatrix(H,"H");
         return H;
     }
     private  RealMatrix createKMatrix(int basisSetSize,double L, double m,double h) { //Kinetic Energy
@@ -153,13 +148,14 @@ public class FunctionBasisSet {
     }
 
     private RealMatrix createVDiagMatrix(RealMatrix D, RealMatrix base, double B, double C){
-        RealMatrix temp = D.power(2).multiply(base)
-                //TODO work on that code, it puts wrong energy values
+        double[][] aDiag = new double[D.getColumn(0).length][D.getColumn(0).length];
+//        for (int i = 0; i < D.getColumn(0).length; i++) {
+//                aDiag[i][i] = (-0.17472109);
+//        }
+        return D.power(2).multiply(base).scalarMultiply(0.5)
                 .add(D.power(3).scalarMultiply(B))
                 .add(D.power(4).scalarMultiply(C));
-        //printMatrix(temp.getData(),"Baza funkcji");
-        return temp;
-
+//                .add(new BlockRealMatrix(aDiag));
     }
 
     private void printMatrix(double[][] A, String name) {

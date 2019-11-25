@@ -4,18 +4,14 @@ import bachelorDegree.model.AnharmonicOscillator;
 import bachelorDegree.model.FunctionBasisSet;
 import bachelorDegree.model.HarmonicOscillator;
 import bachelorDegree.model.Oscillator;
-import bachelorDegree.services.MenuService;
-import bachelorDegree.services.Oscillator1DMapper;
-import bachelorDegree.services.Oscillator2DMapper;
+import bachelorDegree.service.MenuService;
+import bachelorDegree.service.Oscillator1DMapper;
+import bachelorDegree.service.Oscillator2DMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.Charsets;
@@ -247,9 +243,9 @@ public class MenuController {
         setDefaultValues();
         int nx = Integer.parseInt(nxBox.getText());
         int ny = Integer.parseInt(nyBox.getText());
-//        double m = Double.parseDouble(mBox.getText());
-//        double kx = Double.parseDouble(kxBox.getText());
-//        double ky = Double.parseDouble(kyBox.getText());
+        double m = Double.parseDouble(mBox.getText());
+        double kx = Double.parseDouble(kxBox.getText());
+        double ky = Double.parseDouble(kyBox.getText());
 
         if (dimensionsChoiceBox.getValue().equals("1D")) {
             oscillatorX.setN(nx);
@@ -380,7 +376,10 @@ public class MenuController {
             LBox.setText("70.0");
         }
         if (advancedBasisSetTextField.getText().equals("")) {
-            advancedBasisSetTextField.setText("100");
+            advancedBasisSetTextField.setText("300");
+        }
+        if(functionBasisSetComboBox.getSelectionModel().selectedItemProperty().isNull().get()){
+            functionBasisSetComboBox.setValue("300");
         }
     }
 

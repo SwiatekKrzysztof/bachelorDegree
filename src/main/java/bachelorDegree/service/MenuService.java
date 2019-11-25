@@ -1,4 +1,4 @@
-package bachelorDegree.services;
+package bachelorDegree.service;
 
 import bachelorDegree.controller.MenuControllerOld;
 import org.apache.commons.lang3.StringUtils;

@@ -1,4 +1,4 @@
-package bachelorDegree.services;
+package bachelorDegree.service;
 
 import bachelorDegree.model.FunctionBasisSet;
 import org.apache.commons.math3.linear.BlockRealMatrix;
