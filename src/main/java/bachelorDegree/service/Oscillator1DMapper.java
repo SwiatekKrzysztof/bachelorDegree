@@ -20,23 +20,16 @@ public class Oscillator1DMapper {
 
     public void loadLineChartView() throws IOException {
         Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/lineChartView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/lineChartView.fxml"));
+        Parent parent = fxmlLoader.load();
 
-        LineChartController controller = new LineChartController(this,oscillator);
-        fxmlLoader.setController(controller);
-
-        fxmlLoader.load();
-        Parent root = fxmlLoader.getRoot();
-        stage.setScene(new Scene(root));
+        LineChartController controller = (LineChartController) fxmlLoader.getController();
+        //controller.setOscillator(oscillator);
+        controller.addData(oscillator);
+        stage.setTitle(oscillator.getN()+" state visualization");
+        stage.setScene(new Scene(parent));
+//        stage.getIcons().add();
         stage.show();
-//        LineChartController controller = fxmlLoader.<LineChartController>getController();
-//        controller.setMapper(this);
-//        controller.setOscillator(oscillator);
-//
-//        Parent parent = fxmlLoader.getRoot();
-//        stage.setScene(new Scene(parent));
-//        stage.show();
     }
 
     public Oscillator getOscillator() {

@@ -38,12 +38,14 @@ public class Oscillator2DMapper extends AbstractAnalysis {
         Mapper mapper = new Mapper() {
             @Override
             public double f(double x, double y) {
-                return oscillatorX.getValueOfArgument(x)
-                        *oscillatorY.getValueOfArgument(y);
+                return Math.pow(oscillatorX.getValueOfArgument(x),2)
+                        *
+                        Math.pow(oscillatorY.getValueOfArgument(y),2);
             }
         };
-        int steps = 50;
-        Range range = new Range(-8,8);
+        int steps = 100;
+        float L = dynamicRange(oscillatorX.getN(),oscillatorY.getN());
+        Range range = new Range(-L/2,L/2);
         final Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
         surface.setColorMapper(new ColorMapper(
                 new ColorMapRainbow(),
@@ -59,5 +61,8 @@ public class Oscillator2DMapper extends AbstractAnalysis {
         chart.getScene().getGraph().add(surface);
 
 
+    }
+    public static float dynamicRange(int nX, int nY){
+        return (Math.max(nX,nY))/6.0f + 5.0f;
     }
 }
