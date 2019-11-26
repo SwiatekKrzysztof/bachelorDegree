@@ -2,7 +2,6 @@ package bachelorDegree.service;
 
 import bachelorDegree.model.Oscillator;
 import org.jzy3d.analysis.AbstractAnalysis;
-import org.jzy3d.analysis.AnalysisLauncher;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.colors.Color;
 import org.jzy3d.colors.ColorMapper;
@@ -23,18 +22,9 @@ public class Oscillator2DMapper extends AbstractAnalysis {
         this.oscillatorY = oscillatorY;
         return this;
     }
-    public void start(Oscillator oscillatorX, Oscillator oscillatorY){
-
-        try {
-            AnalysisLauncher.open(new Oscillator2DMapper()
-                    .setParameters(oscillatorX,oscillatorY));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
-    public void init() throws Exception {
+    public void init(){
         Mapper mapper = new Mapper() {
             @Override
             public double f(double x, double y) {

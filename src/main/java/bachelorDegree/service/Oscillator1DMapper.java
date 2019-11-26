@@ -24,11 +24,9 @@ public class Oscillator1DMapper {
         Parent parent = fxmlLoader.load();
 
         LineChartController controller = (LineChartController) fxmlLoader.getController();
-        //controller.setOscillator(oscillator);
         controller.addData(oscillator);
         stage.setTitle(oscillator.getN()+" state visualization");
         stage.setScene(new Scene(parent));
-//        stage.getIcons().add();
         stage.show();
     }
 

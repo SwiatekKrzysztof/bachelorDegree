@@ -18,7 +18,7 @@ public class App extends Application
         Parent root =
                 FXMLLoader.load(
                         getClass()
-                                .getResource("/menuView.fxml"));
+                                .getResource("/menuViewNew.fxml"));
 
         primaryStage.setTitle("Visualizer");
         primaryStage.setScene(new Scene(root));

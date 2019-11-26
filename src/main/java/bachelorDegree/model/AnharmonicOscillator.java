@@ -10,9 +10,7 @@ public class AnharmonicOscillator extends Oscillator {
 
     public AnharmonicOscillator(FunctionBasisSet basisSet, String LString) {
         this.basisSet = basisSet;
-//        int n = Integer.parseInt(nString);
         double L = Double.parseDouble(LString);
-//        this.setN(n);
         this.setL(L);
     }
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bachelorDegree.controller.MenuController">
+   <children>
+      <Label layoutX="25.0" layoutY="28.0" text="Oscillator Type" />
+      <Label layoutX="26.0" layoutY="75.0" text="Dimensions" />
+      <ChoiceBox id="oscillatorChoiceBox" fx:id="oscillatorChoiceBox" layoutX="177.0" layoutY="23.0" prefWidth="150.0" />
+      <ChoiceBox id="dimensionsChoiceBox" fx:id="dimensionsChoiceBox" layoutX="178.0" layoutY="70.0" prefWidth="150.0" />
+      <Button id="loadCreateButton" fx:id="loadCreateButton" layoutX="61.0" layoutY="472.0" mnemonicParsing="false" onAction="#loadCreateAction" prefHeight="52.0" prefWidth="235.0" text="Load/Create" />
+      <Label layoutX="35.0" layoutY="638.0" prefHeight="21.0" prefWidth="16.0" text="nx" />
+      <TextField id="nxBox" fx:id="nxBox" layoutX="59.0" layoutY="633.0" prefHeight="31.0" prefWidth="89.0" />
+      <Label layoutX="113.0" layoutY="212.0" text="m" />
+      <Label layoutX="112.0" layoutY="254.0" text="kx" />
+      <Label layoutX="112.0" layoutY="297.0" text="ky" />
+      <TextField id="kyBox" fx:id="kyBox" layoutX="140.0" layoutY="292.0" prefHeight="31.0" prefWidth="123.0" promptText="1.0" />
+      <TextField id="kxBox" fx:id="kxBox" layoutX="140.0" layoutY="249.0" prefHeight="31.0" prefWidth="123.0" promptText="1.0" />
+      <TextField id="mBox" fx:id="mBox" layoutX="140.0" layoutY="207.0" prefHeight="31.0" prefWidth="123.0" promptText="1.0" />
+      <Button id="visualizeButton" fx:id="visualizeButton" layoutX="187.0" layoutY="637.0" mnemonicParsing="false" onAction="#visualize" prefHeight="75.0" prefWidth="135.0" text="Visualize" />
+      <TextField id="nyBox" fx:id="nyBox" layoutX="59.0" layoutY="685.0" prefHeight="31.0" prefWidth="89.0" />
+      <Label layoutX="35.0" layoutY="690.0" text="ny" />
+      <TextField id="LBox" fx:id="LBox" layoutX="140.0" layoutY="335.0" prefHeight="31.0" prefWidth="123.0" promptText="70.0" />
+      <Label layoutX="113.0" layoutY="340.0" text="L" />
+      <Line endX="199.0" layoutX="126.0" layoutY="607.0" startX="-98.0" />
+      <Label layoutX="112.0" layoutY="382.0" text="B" />
+      <Label layoutX="112.0" layoutY="422.0" text="C" />
+      <TextField id="BBox" fx:id="BBox" layoutX="140.0" layoutY="376.0" prefHeight="31.0" prefWidth="123.0" promptText="????" />
+      <TextField id="CBox" fx:id="CBox" layoutX="140.0" layoutY="417.0" prefHeight="31.0" prefWidth="123.0" promptText="????" />
+      <Button fx:id="aboutButton" layoutX="117.0" layoutY="738.0" mnemonicParsing="false" onAction="#aboutAction" text="About program" />
+      <TextField fx:id="advancedBasisSetTextField" layoutX="89.0" layoutY="161.0" prefHeight="31.0" prefWidth="178.0" promptText="500" />
+      <Label fx:id="basisSizeLabelAdvanced" layoutX="136.0" layoutY="140.0" text="Basis set size" />
+      <Label layoutX="281.0" layoutY="212.0" text="a.u" />
+      <ProgressBar fx:id="progressBar" layoutX="61.0" layoutY="541.0" prefHeight="31.0" prefWidth="235.0" progress="0.0" visible="false" />
+      <Line endX="199.0" layoutX="126.0" layoutY="125.0" startX="-98.0" />
+      <Label fx:id="successMessage" alignment="CENTER" layoutX="103.0" layoutY="557.0" prefHeight="52.0" prefWidth="150.0" text="Basis set created!" textAlignment="CENTER" visible="false">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

@@ -1,12 +1,10 @@
 package bachelorDegree.model;
 
 public class HarmonicOscillator extends Oscillator {
-    public HarmonicOscillator( String mString, String kOneString, String kTwoString, String LString) {
+    public HarmonicOscillator( String mString, String kString, String LString) {
         double m = Double.parseDouble(mString);
-        double k = Double.parseDouble(kOneString);
-        double h = Double.parseDouble(kTwoString);
+        double k = Double.parseDouble(kString);
         double L = Double.parseDouble(LString);
-//        this.setN(n);
         this.setK(k);
         this.setM(m);
         this.setL(L);

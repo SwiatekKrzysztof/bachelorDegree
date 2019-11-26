@@ -13,8 +13,6 @@ import java.util.Arrays;
 import static bachelorDegree.service.SerializationService.deserializeBasisSet;
 import static bachelorDegree.service.SerializationService.serializeBasisSet;
 
-//todo change to class for every AnharmonicOscillator have to have it's own base (k can be different for each)
-//todo add field to AnharmonicOscillator
 public class FunctionBasisSet {
 
     private RealMatrix CMatrix;
@@ -38,36 +36,27 @@ public class FunctionBasisSet {
 
     private void createNewQuickBasisSet(String basisSetSize) throws IOException, ClassNotFoundException {
         System.out.println("CREATING NEW " + basisSetSize);
-//        double[][] testDoubleArray = new double[5][5];
-//        for (int i = 0; i < testDoubleArray.length; i++) {
-//            for (int j = 0; j < testDoubleArray.length; j++) {
-//                testDoubleArray[i][j] = i % (j + 1);
-//            }
-//        }
         String BParameter = "1.0";
         String CParameter = "1.0";
-        createNewAdvancedBasicSet("1.0","1.0","1.0","70.0",BParameter,CParameter,basisSetSize);
+        createNewAdvancedBasicSet("1.0","1.0","70.0",BParameter,CParameter,basisSetSize);
         serializeBasisSet(CMatrix, basisSetSize, "C");
-        //serializeBasisSet(vectorsMap,basisSetSize,"V");
-        //serializeBasisSet(EMatrix, basisSetSize, "E");
     }
 
-    public void createNewAdvancedBasicSet(String mString, String kString, String hString,
+    public void createNewAdvancedBasicSet(String mString, String kString,
                                           String LString, String BString, String CString,
                                           String basisSetSizeString) {
 
         double m = Double.parseDouble(mString);
         double k = Double.parseDouble(kString);
-        double h = Double.parseDouble(hString);
         double L = Double.parseDouble(LString);
         double B = Double.parseDouble(BString);
         double C = Double.parseDouble(CString);
         int basisSetSize = Integer.parseInt(basisSetSizeString);
 
-        createMatrices(basisSetSize,L,k,m,h,B,C);
+        createMatrices(basisSetSize,L,k,m,B,C);
     }
 
-    private void createMatrices(int basisSetSize, double L, double k, double m, double h,double B, double C){
+    private void createMatrices(int basisSetSize, double L, double k, double m,double B, double C){
         RealMatrix A = new BlockRealMatrix(basisSetSize,basisSetSize);
         int sum;
         for (int i = 1; i <= basisSetSize; i++) {
@@ -81,7 +70,7 @@ public class FunctionBasisSet {
                 }
             }
         }
-        RealMatrix H = createHMatrix(A,k,basisSetSize,L,m,h,B,C);
+        RealMatrix H = createHMatrix(A,k,basisSetSize,L,m,B,C);
         EigenDecomposition decomposition = new EigenDecomposition(H);
         this.CMatrix = decomposition.getV();
         
@@ -122,7 +111,7 @@ public class FunctionBasisSet {
         return new DiagonalMatrix(doubleBase,false);
     }
 
-    private RealMatrix createHMatrix(RealMatrix A,double k,int basisSetSize, double L, double m, double h, double B, double C){
+    private RealMatrix createHMatrix(RealMatrix A, double k, int basisSetSize, double L, double m, double B, double C){
         RealMatrix base = createFunctionBase(basisSetSize,k);
 
         EigenDecomposition decomposition = new EigenDecomposition(A);
@@ -133,13 +122,15 @@ public class FunctionBasisSet {
 
         // Potential Energy
         RealMatrix V = T.multiply(VDiag).multiply(TTrans).copy();
+
         //Kinetic Energy
-        RealMatrix K = createKMatrix(basisSetSize,L,m,h);
+        RealMatrix K = createKMatrix(basisSetSize,L,m);
         RealMatrix H = V.add(K);
         return H;
     }
-    private  RealMatrix createKMatrix(int basisSetSize,double L, double m,double h) { //Kinetic Energy
+    private  RealMatrix createKMatrix(int basisSetSize,double L, double m) { //Kinetic Energy
         double[] doubleK = new double[basisSetSize];
+        double h = 1.0;
         double multiplier = ( (h*h)/(2.0*m) ) * Math.pow( (Math.PI/L) ,2.0);
         for (int i = 0; i < doubleK.length; i++) {
             doubleK[i] = (i+1)*(i+1)*multiplier;
