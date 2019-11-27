@@ -1,6 +1,7 @@
 package bachelorDegree.model;
 
-import bachelorDegree.service.MenuService;
+import bachelorDegree.service.FileService;
+import lombok.Data;
 import org.apache.commons.math3.linear.BlockRealMatrix;
 import org.apache.commons.math3.linear.DiagonalMatrix;
 import org.apache.commons.math3.linear.EigenDecomposition;
@@ -10,37 +11,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static bachelorDegree.service.SerializationService.deserializeBasisSet;
-import static bachelorDegree.service.SerializationService.serializeBasisSet;
-
+@Data
 public class FunctionBasisSet {
 
     private RealMatrix CMatrix;
     private RealMatrix EMatrix;
     private ArrayList<Double> ESorted;
     private ArrayList<Integer> vectorsMap;
-
-
-
-    public void findBasisSet(String basisSetSize) throws IOException, ClassNotFoundException {
-        if (MenuService.basisSetExists(basisSetSize)) {
-            deserializeBasisSet(this,basisSetSize, "C");
-            //deserializeBasisSet(this,basisSetSize, "E");
-        } else {
-            createNewQuickBasisSet(basisSetSize);
-            deserializeBasisSet(this,basisSetSize, "C");
-            //deserializeBasisSet(this,basisSetSize, "E");
-            printMatrix(CMatrix.getData(),"C");
-        }
-    }
-
-    private void createNewQuickBasisSet(String basisSetSize) throws IOException, ClassNotFoundException {
-        System.out.println("CREATING NEW " + basisSetSize);
-        String BParameter = "1.0";
-        String CParameter = "1.0";
-        createNewAdvancedBasicSet("1.0","1.0","70.0",BParameter,CParameter,basisSetSize);
-        serializeBasisSet(CMatrix, basisSetSize, "C");
-    }
 
     public void createNewAdvancedBasicSet(String mString, String kString,
                                           String LString, String BString, String CString,
@@ -98,8 +75,11 @@ public class FunctionBasisSet {
         }
 
         diagonalArray.forEach(System.out::println);
-        System.out.println("---");
-        vectorsMap.forEach(System.out::println);
+        try {
+            FileService.createCSVFile(diagonalArray,String.valueOf(diagonalArray.size()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         this.ESorted = diagonalArray;
         }
@@ -140,13 +120,13 @@ public class FunctionBasisSet {
 
     private RealMatrix createVDiagMatrix(RealMatrix D, RealMatrix base, double B, double C){
         double[][] aDiag = new double[D.getColumn(0).length][D.getColumn(0).length];
-//        for (int i = 0; i < D.getColumn(0).length; i++) {
-//                aDiag[i][i] = (-0.17472109);
-//        }
+        for (int i = 0; i < D.getColumn(0).length; i++) {
+                aDiag[i][i] = (-0.17472109);
+        }
         return D.power(2).multiply(base).scalarMultiply(0.5)
                 .add(D.power(3).scalarMultiply(B))
-                .add(D.power(4).scalarMultiply(C));
-//                .add(new BlockRealMatrix(aDiag));
+                .add(D.power(4).scalarMultiply(C))
+                .add(new BlockRealMatrix(aDiag));
     }
 
     private void printMatrix(double[][] A, String name) {
@@ -158,29 +138,5 @@ public class FunctionBasisSet {
             System.out.println();
         }
         System.out.println("---");
-    }
-
-    public RealMatrix getCMatrix() {
-        return CMatrix;
-    }
-
-    public void setCMatrix(RealMatrix CMatrix) {
-        this.CMatrix = CMatrix;
-    }
-
-    public RealMatrix getEMatrix() {
-        return EMatrix;
-    }
-
-    public void setEMatrix(RealMatrix EMatrix) {
-        this.EMatrix = EMatrix;
-    }
-
-    public ArrayList<Double> getESorted() {
-        return ESorted;
-    }
-
-    public ArrayList<Integer> getVectorsMap() {
-        return vectorsMap;
     }
 }

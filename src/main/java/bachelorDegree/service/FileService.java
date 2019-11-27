@@ -1,12 +1,15 @@
 package bachelorDegree.service;
 
 import bachelorDegree.model.FunctionBasisSet;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.math3.linear.BlockRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 
 import java.io.*;
+import java.util.List;
 
-public class SerializationService {
+public class FileService {
     public static void serializeBasisSet(RealMatrix basisSet, String basisSetSize, String basisSetSymbol) throws IOException {
         System.out.println("SERIALIZING "+basisSetSize+basisSetSymbol);
         FileOutputStream fos = new FileOutputStream("src/main/resources/basisSets/"+ basisSetSize + basisSetSymbol );
@@ -29,5 +32,18 @@ public class SerializationService {
             functionBasisSet.setEMatrix(new BlockRealMatrix(tempArray));
         }
         System.out.println("DESERIALIZING COMPLETE");
+    }
+
+    public static void createCSVFile(List<Double> list, String name) throws IOException {
+        FileWriter out = new FileWriter(name +".csv");
+        try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT)) {
+            list.forEach(d -> {
+                try {
+                    printer.printRecord(d);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 }

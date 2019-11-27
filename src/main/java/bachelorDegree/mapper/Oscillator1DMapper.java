@@ -1,4 +1,4 @@
-package bachelorDegree.service;
+package bachelorDegree.mapper;
 
 import bachelorDegree.controller.LineChartController;
 import bachelorDegree.model.Oscillator;
@@ -6,12 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.io.IOException;
-@Getter
-@Setter
+@Data
 public class Oscillator1DMapper {
     Oscillator oscillator;
     public Oscillator1DMapper(Oscillator oscillator) {
@@ -28,13 +26,5 @@ public class Oscillator1DMapper {
         stage.setTitle(oscillator.getN()+" state visualization");
         stage.setScene(new Scene(parent));
         stage.show();
-    }
-
-    public Oscillator getOscillator() {
-        return oscillator;
-    }
-
-    public void setOscillator(Oscillator oscillator) {
-        this.oscillator = oscillator;
     }
 }

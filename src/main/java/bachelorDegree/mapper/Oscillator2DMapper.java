@@ -1,4 +1,4 @@
-package bachelorDegree.service;
+package bachelorDegree.mapper;
 
 import bachelorDegree.model.Oscillator;
 import org.jzy3d.analysis.AbstractAnalysis;
@@ -33,7 +33,7 @@ public class Oscillator2DMapper extends AbstractAnalysis {
                         Math.pow(oscillatorY.getValueOfArgument(y),2);
             }
         };
-        int steps = 100;
+        int steps = 150;
         float L = dynamicRange(oscillatorX.getN(),oscillatorY.getN());
         Range range = new Range(-L/2,L/2);
         final Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
@@ -52,7 +52,7 @@ public class Oscillator2DMapper extends AbstractAnalysis {
 
 
     }
-    public static float dynamicRange(int nX, int nY){
-        return (Math.max(nX,nY))/6.0f + 5.0f;
+    private static float dynamicRange(int nX, int nY){
+        return (Math.max(nX,nY))/4.5f + 8.0f;
     }
 }

@@ -21,7 +21,6 @@ public class LineChartController {
     public void initialize() {
         lineChart.animatedProperty().setValue(true);
         lineChart.setCreateSymbols(false);
-        //lineChart.setStyle("-fx-stroke: #00000f;");
 
     }
 
@@ -32,16 +31,8 @@ public class LineChartController {
         }
         lineChart.getData().addAll(series);
     }
-//
-//    public void addData(Oscillator oscillator) {
-//        double L = dynamicRange(oscillator.getN());
-//        for (double i = -L / 2; i < (L / 2); i = i + 0.05) {
-//            series.getData().add(new XYChart.Data<>(String.valueOf(i), Math.pow(oscillator.getValueOfArgument(i), 2)));
-//        }
-//        lineChart.getData().addAll(series);
-//    }
 
-    public static double dynamicRange(int n) {
+    private static double dynamicRange(int n) {
         return (n) / 6.0 + 5.0;
     }
 }
