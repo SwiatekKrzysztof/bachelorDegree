@@ -49,8 +49,8 @@ public class FunctionBasisSet {
         }
         RealMatrix H = createHMatrix(A,k,basisSetSize,L,m,B,C);
         EigenDecomposition decomposition = new EigenDecomposition(H);
+
         this.CMatrix = decomposition.getV();
-        
         RealMatrix EDiag = decomposition.getD();
         getMapOfDiagonalMatrixAndVector(EDiag);
     }
@@ -85,8 +85,6 @@ public class FunctionBasisSet {
         }
     private RealMatrix createFunctionBase(int basisSetSize, double k){
         double[] doubleBase = new double[basisSetSize];
-        //TODO CHANGED LINE< TESTING >
-        //Arrays.fill(doubleBase, (k) /2.0);
         Arrays.fill(doubleBase, k);
         return new DiagonalMatrix(doubleBase,false);
     }
@@ -117,26 +115,10 @@ public class FunctionBasisSet {
         }
         return new DiagonalMatrix(doubleK,false);
     }
-
+    
     private RealMatrix createVDiagMatrix(RealMatrix D, RealMatrix base, double B, double C){
-        double[][] aDiag = new double[D.getColumn(0).length][D.getColumn(0).length];
-        for (int i = 0; i < D.getColumn(0).length; i++) {
-                aDiag[i][i] = (-0.17472109);
-        }
         return D.power(2).multiply(base).scalarMultiply(0.5)
                 .add(D.power(3).scalarMultiply(B))
-                .add(D.power(4).scalarMultiply(C))
-                .add(new BlockRealMatrix(aDiag));
-    }
-
-    private void printMatrix(double[][] A, String name) {
-        System.out.println(name);
-        for (int i = 0; i < A.length; i++) {
-            for (double[] doubles : A) {
-                System.out.printf("%.2f   ", doubles[i]);
-            }
-            System.out.println();
-        }
-        System.out.println("---");
+                .add(D.power(4).scalarMultiply(C));
     }
 }

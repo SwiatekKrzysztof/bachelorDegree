@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="419.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bachelorDegree.controller.AboutAuthorController">
+   <children>
+      <TextArea editable="false" layoutX="21.0" layoutY="23.0" prefHeight="149.0" prefWidth="377.0" text="Krzysztof Świątek - Java Developer&#10;&#10;Email: swiatek.krzyszotof95@gmail.com&#10;GitHub: https://github.com/SwiatekKrzysztof&#10;&#10;Toruń 2019" />
+   </children>
+</Pane>

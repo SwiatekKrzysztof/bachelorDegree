@@ -15,7 +15,7 @@
       <Label layoutX="26.0" layoutY="75.0" text="Dimensions" />
       <ChoiceBox id="oscillatorChoiceBox" fx:id="oscillatorChoiceBox" layoutX="177.0" layoutY="23.0" prefWidth="150.0" />
       <ChoiceBox id="dimensionsChoiceBox" fx:id="dimensionsChoiceBox" layoutX="178.0" layoutY="70.0" prefWidth="150.0" />
-      <Button id="loadCreateButton" fx:id="loadCreateButton" layoutX="61.0" layoutY="472.0" mnemonicParsing="false" onAction="#loadCreateAction" prefHeight="52.0" prefWidth="235.0" text="Load/Create" />
+      <Button id="loadCreateButton" fx:id="loadCreateButton" layoutX="61.0" layoutY="472.0" mnemonicParsing="false" onAction="#loadCreateAction" prefHeight="52.0" prefWidth="235.0" text="Calculate" />
       <Label layoutX="35.0" layoutY="638.0" prefHeight="21.0" prefWidth="16.0" text="nx" />
       <TextField id="nxBox" fx:id="nxBox" layoutX="59.0" layoutY="633.0" prefHeight="31.0" prefWidth="89.0" />
       <Label layoutX="113.0" layoutY="212.0" text="m" />
@@ -32,15 +32,15 @@
       <Line endX="199.0" layoutX="126.0" layoutY="607.0" startX="-98.0" />
       <Label layoutX="112.0" layoutY="382.0" text="B" />
       <Label layoutX="112.0" layoutY="422.0" text="C" />
-      <TextField id="BBox" fx:id="BBox" layoutX="140.0" layoutY="376.0" prefHeight="31.0" prefWidth="123.0" promptText="????" />
-      <TextField id="CBox" fx:id="CBox" layoutX="140.0" layoutY="417.0" prefHeight="31.0" prefWidth="123.0" promptText="????" />
+      <TextField id="BBox" fx:id="BBox" layoutX="140.0" layoutY="376.0" prefHeight="31.0" prefWidth="123.0" promptText="0.0" />
+      <TextField id="CBox" fx:id="CBox" layoutX="140.0" layoutY="417.0" prefHeight="31.0" prefWidth="123.0" promptText="0.0" />
       <Button fx:id="aboutButton" layoutX="117.0" layoutY="738.0" mnemonicParsing="false" onAction="#aboutAction" text="About program" />
       <TextField fx:id="advancedBasisSetTextField" layoutX="89.0" layoutY="161.0" prefHeight="31.0" prefWidth="178.0" promptText="500" />
       <Label fx:id="basisSizeLabelAdvanced" layoutX="136.0" layoutY="140.0" text="Basis set size" />
       <Label layoutX="281.0" layoutY="212.0" text="a.u" />
       <ProgressBar fx:id="progressBar" layoutX="61.0" layoutY="541.0" prefHeight="31.0" prefWidth="235.0" progress="0.0" visible="false" />
       <Line endX="199.0" layoutX="126.0" layoutY="125.0" startX="-98.0" />
-      <Label fx:id="successMessage" alignment="CENTER" layoutX="103.0" layoutY="557.0" prefHeight="52.0" prefWidth="150.0" text="Basis set created!" textAlignment="CENTER" visible="false">
+      <Label fx:id="successMessage" alignment="CENTER" layoutX="45.0" layoutY="557.0" prefHeight="52.0" prefWidth="285.0" text="Calculations complete!" textAlignment="CENTER" visible="false">
          <font>
             <Font size="18.0" />
          </font>

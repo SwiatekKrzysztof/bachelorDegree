@@ -32,7 +32,7 @@ public class LineChartController {
         lineChart.getData().addAll(series);
     }
 
-    private static double dynamicRange(int n) {
+    private double dynamicRange(int n) {
         return (n) / 6.0 + 5.0;
     }
 }

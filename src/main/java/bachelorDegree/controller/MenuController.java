@@ -10,15 +10,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import org.jzy3d.analysis.AnalysisLauncher;
+
+import java.io.IOException;
 
 
 @Getter
 @Setter
 public class MenuController {
+
 
     private ObservableList<String> oscillatorChoiceList = FXCollections.observableArrayList("Harmonic", "Anharmonic");
     private ObservableList<String> dimensionChoiceList = FXCollections.observableArrayList("1D", "2D");
@@ -89,6 +96,7 @@ public class MenuController {
         boolean isItNotAnharmonic = !oscillatorChoiceBox.getValue().equals("Anharmonic");
         BBox.setDisable(isItNotAnharmonic);
         CBox.setDisable(isItNotAnharmonic);
+
         advancedBasisSetTextField.setDisable(isItNotAnharmonic);
         basisSizeLabelAdvanced.setDisable(isItNotAnharmonic);
         kyBox.setDisable(!dimensionsChoiceBox.getValue().equals("2D"));
@@ -110,8 +118,8 @@ public class MenuController {
         String kx = kxBox.getText();
         String ky = kyBox.getText();
         String L = LBox.getText();
-        String B = BBox.getText();
-        String C = CBox.getText();
+        String Bx = BBox.getText();
+        String Cx = CBox.getText();
         String basisSetSize = advancedBasisSetTextField.getText();
 
         progressBar.setProgress(0.2);
@@ -128,13 +136,13 @@ public class MenuController {
                 oscillatorY = new HarmonicOscillator(m, ky, L);
         } else if (oscillatorIsAnharmonic) {
             basisSetX = new FunctionBasisSet();
-            basisSetX.createNewAdvancedBasicSet(m, kx, L, B, C, basisSetSize);
+            basisSetX.createNewAdvancedBasicSet(m, kx, L, Bx, Cx, basisSetSize);
             oscillatorX = new AnharmonicOscillator(basisSetX, L);
 
             progressBar.setProgress(0.5);
             if (dimensionIs2D) {
                 basisSetY = new FunctionBasisSet();
-                basisSetY.createNewAdvancedBasicSet(m, ky, L, B, C, basisSetSize);
+                basisSetY.createNewAdvancedBasicSet(m, ky, L, Bx, Cx, basisSetSize);
                 oscillatorY = new AnharmonicOscillator(basisSetY, L);
             }
 
@@ -232,11 +240,11 @@ public class MenuController {
         }
 
         if (BBox.getText().equals("")) {
-            BBox.setText("1.0");
+            BBox.setText("0.0");
         }
 
         if (CBox.getText().equals("")) {
-            CBox.setText("1.0");
+            CBox.setText("0.0");
         }
 
         if (LBox.getText().equals("")) {
@@ -248,7 +256,13 @@ public class MenuController {
         }
     }
 
-    public void aboutAction(ActionEvent actionEvent) {
-        //todo about program and author
+    @FXML
+    public void aboutAction(ActionEvent actionEvent) throws IOException {
+        Stage stage = new Stage();
+        stage.setTitle("About author");
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/about.fxml"));
+        Parent parent = fxmlLoader.load();
+        stage.setScene(new Scene(parent));
+        stage.show();
     }
 }
